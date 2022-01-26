@@ -1,5 +1,5 @@
-name: escribo
-description: A new Flutter application.
+name: Escribo
+description: Jogo Cobras e Escadas.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -45,11 +45,18 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  flutter_launcher_icons: ^0.9.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+flutter_icons:
+  image_path_android: "assets/images/iconeAndroid.png"
+  image_path_ios: "assets/images/iconeIos.png"
+  android: true
+  ios: true
+
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -60,6 +67,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/images/tabuleiro.jpeg
+     - assets/images/jogador1.png
+     - assets/images/jogador2.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
