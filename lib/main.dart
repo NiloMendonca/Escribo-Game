@@ -322,11 +322,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var listaFluxo = [
     new Fluxo(0, 'Bem vindo ao Cobras e Escadas!', 0),
-    new Fluxo(0, 'É a vez do Jogador 1', 0),
-    new Fluxo(0, "Digite 's' para jogar os dados", 1)
+    new Fluxo(0, 'É a vez do Jogador 1', 1),
   ];
-
-  final controllerTextoUsuario = TextEditingController();
 
   ScrollController controllerScroll = new ScrollController();
 
@@ -344,8 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 jogador2 = new CobrasEscadas(0);
                 listaFluxo = [
                   new Fluxo(0, 'Bem vindo ao Cobras e Escadas!', 0),
-                  new Fluxo(0, 'É a vez do Jogador 1', 0),
-                  new Fluxo(0, "Digite 's' para jogar os dados", 1)
+                  new Fluxo(0, 'É a vez do Jogador 1', 1),
                 ];
               });
             },
@@ -370,16 +366,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: Text(
                       "Jogador 1",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.red,
                           fontSize: 22.0,
                       ),
                     ),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.transparent,
+                    shape: StadiumBorder(side: BorderSide(color: Colors.red)),
                   ),
                   Text(
                     jogador1.posicao.toString(),
                     style: TextStyle(
-                      color: Colors.black26,
+                      color: Colors.red,
                       fontSize: 22.0,
                     ),
                   ),
@@ -392,16 +389,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: Text(
                       "Jogador 2",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.green,
                         fontSize: 22.0,
                       ),
                     ),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.transparent,
+                    shape: StadiumBorder(side: BorderSide(color: Colors.green)),
                   ),
                   Text(
                     jogador2.posicao.toString(),
                     style: TextStyle(
-                      color: Colors.black26,
+                      color: Colors.green,
                       fontSize: 22.0,
                     ),
                   ),
@@ -432,12 +430,11 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(8)
           ),
           Container(
-                height: 250,
+                height: 300,
                 width: MediaQuery.of(context).size.width - 40.0,
                 child: InputDecorator(
                   decoration: new InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(0.0,15.0,0.0,0.0),
-                      labelText: 'Diálogo',
+                      contentPadding: const EdgeInsets.all(2.0),
                       border: OutlineInputBorder()
                   ),
                   child: Column(children: <Widget>[
@@ -447,7 +444,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         shrinkWrap: true,
                         itemCount: listaFluxo.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return BubbleChat(listaFluxo[index].jogador, listaFluxo[index].dialogo);
+                          return chat(listaFluxo[index].jogador, listaFluxo[index].dialogo);
                         }
                     ),
                   )
@@ -455,79 +452,68 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Container(
-              padding: EdgeInsets.fromLTRB(0.0,15.0,0.0,5.0),
-              width: MediaQuery.of(context).size.width - 40.0,
-              height: 70,
-              child: TextField(
-                controller: controllerTextoUsuario,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Comando",
-                ),
-              ),
-          ),
-          ElevatedButton(
-                    child: const Text('Jogar'),
+            ActionChip(
+                    label: Text(
+                      "Jogar",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22.0,
+                      ),
+                    ),
+                    backgroundColor: Colors.blue,
                     onPressed: () {
-                      int jogadorAtual = listaFluxo[listaFluxo.length-1].proxJogador;
-                      Random random = new Random();
-                      int dado1 = random.nextInt(5) + 1;
-                      int dado2 = random.nextInt(5) + 1;
-                      int proxJogador;
-                      if(jogadorAtual == 1 && dado1 == dado2){
-                        proxJogador = 1;
+                      if(listaFluxo[listaFluxo.length-1].proxJogador == 3){
+                        listaFluxo.add(Fluxo(0, 'O jogo acabou!', 3));
+                        moverScroll();
+                        return;
                       }
-                      else if(jogadorAtual == 1 && dado1 != dado2){
-                        proxJogador = 2;
-                      }
-                      else if(jogadorAtual == 2 && dado1 == dado2){
-                        proxJogador = 2;
-                      }
-                      else{
-                        proxJogador = 1;
-                      }
-                      setState(() {
-                        listaFluxo.add(Fluxo(jogadorAtual, controllerTextoUsuario.text, proxJogador));
-                        if(controllerTextoUsuario.text != 's'){
-                          listaFluxo.add(Fluxo(0, 'Opção inválida selecionada', jogadorAtual));
-                          listaFluxo.add(Fluxo(0, 'É a vez do Jogador ${jogadorAtual}', jogadorAtual));
-                          listaFluxo.add(Fluxo(0, "Digite 's' para jogar os dados", jogadorAtual));
+                        int jogadorAtual = listaFluxo[listaFluxo.length-1].proxJogador;
+                        Random random = new Random();
+                        int dado1 = random.nextInt(5) + 1;
+                        int dado2 = random.nextInt(5) + 1;
+                        int proxJogador;
+                        if(jogadorAtual == 1 && dado1 == dado2){
+                          proxJogador = 1;
                         }
-                        else if(listaFluxo[listaFluxo.length-1].proxJogador == 3){
-                          listaFluxo.add(Fluxo(0, 'O jogo acabou!', 3));
+                        else if(jogadorAtual == 1 && dado1 != dado2){
+                          proxJogador = 2;
                         }
-                        else {
-                          listaFluxo.add(Fluxo(0, 'Dado 1: ${dado1}', proxJogador));
-                          listaFluxo.add(Fluxo(0, 'Dado 2: ${dado2}', proxJogador));
-                          if(dado1 == dado2){
-                            listaFluxo.add(Fluxo(0, 'Você tirou valores iguais nos dados!', proxJogador));
+                        else if(jogadorAtual == 2 && dado1 == dado2){
+                          proxJogador = 2;
+                        }
+                        else{
+                          proxJogador = 1;
+                        }
+                        setState(() {
+                          listaFluxo.add(Fluxo(
+                              jogadorAtual, 'O jogador ${jogadorAtual} jogou',
+                              proxJogador));
+
+                          listaFluxo.add(
+                              Fluxo(0, 'Dado 1: ${dado1}', proxJogador));
+                          listaFluxo.add(
+                              Fluxo(0, 'Dado 2: ${dado2}', proxJogador));
+                          if (dado1 == dado2) {
+                            listaFluxo.add(Fluxo(
+                                0, 'Você tirou valores iguais nos dados!',
+                                proxJogador));
                           }
-                          if(jogadorAtual == 1){
-                            jogador1.setPosicao(jogador1.posicao + jogador1.jogar(dado1, dado2), listaFluxo, 1);
+                          if (jogadorAtual == 1) {
+                            jogador1.setPosicao(jogador1.posicao +
+                                jogador1.jogar(dado1, dado2), listaFluxo, 1);
                           }
-                          else{
-                            jogador2.setPosicao(jogador2.posicao + jogador2.jogar(dado1, dado2), listaFluxo, 2);
+                          else {
+                            jogador2.setPosicao(jogador2.posicao +
+                                jogador2.jogar(dado1, dado2), listaFluxo, 2);
                           }
 
-                          if(listaFluxo[listaFluxo.length-1].proxJogador != 3) {
+                          if (listaFluxo[listaFluxo.length - 1].proxJogador !=
+                              3) {
                             listaFluxo.add(Fluxo(
                                 0, 'É a vez do Jogador ${proxJogador}',
                                 proxJogador));
-                            listaFluxo.add(Fluxo(
-                                0, "Digite 's' para jogar os dados",
-                                proxJogador));
                           }
-                        }
-                        controllerTextoUsuario.text = '';
-                        Timer(Duration(seconds: 1), () =>
-                          controllerScroll.animateTo(
-                            controllerScroll.position.maxScrollExtent,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 300),
-                          )
-                        );
+                          moverScroll();
                       });
                     },
           ),
@@ -536,6 +522,18 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
       ),
     );
+  }
+
+  void moverScroll(){
+    setState(() {
+      Timer(Duration(seconds: 1), () =>
+          controllerScroll.animateTo(
+            controllerScroll.position.maxScrollExtent,
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 300),
+          )
+      );
+    });
   }
 
   bool getPaddingJogador(int jogador){
@@ -556,7 +554,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  BubbleChat(jogador, dialogo) {
+  chat(jogador, dialogo) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         getPaddingJogador(jogador) ? 64.0 : 16.0,
